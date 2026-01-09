@@ -1,13 +1,9 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from src.auth import check_password
 from src.data import load_data, process_sla
+import src.utils as utils
 
 st.set_page_config(page_title="Indicadores de Gestão", layout="wide")
 
@@ -81,3 +77,5 @@ chart_evolucao = alt.Chart(evolucao).mark_line(point=True).encode(
     tooltip=['Mes_Ano', 'Quantidade']
 )
 st.altair_chart(chart_evolucao, use_container_width=True)
+
+st.markdown(utils.footer(), unsafe_allow_html=True)

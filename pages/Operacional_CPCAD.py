@@ -1,35 +1,26 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import sys
-import os
-
-# Adiciona o diretório raiz ao path para importar módulos src
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from src.auth import check_password
 from src.data import load_data, process_sla
+import src.utils as utils
 
 st.set_page_config(page_title="Operacional CPCAD", layout="wide")
 
-# 1. Verificação de Segurança
 if not check_password():
     st.stop()
 
 st.title("Painel Operacional - CPCAD")
 st.markdown("### Monitoramento de Prazos e Fluxo Processual")
 
-# 2. Carregamento de Dados
 df = load_data()
 
 if df.empty:
     st.warning("Não foi possível carregar os dados ou a planilha está vazia.")
     st.stop()
 
-# 3. Processamento de Regras de Negócio
 df = process_sla(df)
 
-# 4. KPIs Principais
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total de Processos", len(df))
 col2.metric("Críticos (> 2 dias)", len(df[df['Status Prazos'].str.contains('ATRASADO', na=False)]))
@@ -80,3 +71,5 @@ with st.expander("🔧 Atualizar Status do Processo"):
     if st.button("Salvar Alterações"):
         st.success(f"Alteração registrada! Fase: {nova_fase} | SEI: {novo_sei}")
         st.caption("Nota: A persistência real na planilha requer configuração de Service Account (Google Cloud).")
+
+st.markdown(utils.footer(), unsafe_allow_html=True)

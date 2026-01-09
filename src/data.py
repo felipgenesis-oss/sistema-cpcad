@@ -49,7 +49,6 @@ def process_sla(df):
     agora = datetime.now()
     col_cargo = next((c for c in df.columns if 'cargo' in c.lower()), df.columns[-1])
     
-    # Lógica de Responsável
     def definir_responsavel(cargo):
         cargo = str(cargo).lower()
         if 'juiz' in cargo or 'magistrado' in cargo:
