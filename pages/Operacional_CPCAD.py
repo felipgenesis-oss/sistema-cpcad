@@ -39,7 +39,7 @@ col4.metric("Em Triagem", len(df[df['Fase Atual'] == 'Triagem Inicial']))
 st.divider()
 
 # 5. Tabela de Monitoramento (Prioridade para Atrasados)
-st.subheader("🚨 Fila de Prioridade (Prazos)")
+st.subheader("Fila de Prioridade (Prazos)")
 
 # Filtros laterais
 st.sidebar.header("Filtros Operacionais")
