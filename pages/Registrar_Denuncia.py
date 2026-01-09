@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Registrar Denúncia", layout="wide")
 
-st.title("📝 Canal de Denúncias")
+st.title("Canal de Denúncias")
 st.markdown("### Envie seu relato de forma segura")
 
 st.info("Este canal é seguro e pode ser utilizado para denúncias anônimas ou identificadas.")

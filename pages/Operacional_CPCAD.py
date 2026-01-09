@@ -16,7 +16,7 @@ st.set_page_config(page_title="Operacional CPCAD", layout="wide")
 if not check_password():
     st.stop()
 
-st.title("⚙️ Painel Operacional - CPCAD")
+st.title("Painel Operacional - CPCAD")
 st.markdown("### Monitoramento de Prazos e Fluxo Processual")
 
 # 2. Carregamento de Dados

@@ -15,7 +15,7 @@ st.set_page_config(page_title="Indicadores de Gestão", layout="wide")
 if not check_password():
     st.stop()
 
-st.title("📊 Indicadores de Gestão - CPCAD")
+st.title("Indicadores de Gestão - CPCAD")
 st.markdown("### Visão Estratégica e Estatísticas")
 
 # 2. Carregamento de Dados
