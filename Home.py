@@ -1,9 +1,7 @@
 import streamlit as st
-import assets.icons as icons
+import assets.svg as svg
 import src.utils as utils
-
-TJRO_IMAGE = "https://www.tjro.jus.br/templates/portal_tjro_helix_j5/images/presets/default/logo.png"
-
+from src.auth import authenticator, show_user_sidebar
 
 st.set_page_config(
     page_title="Portal CPCAD", 
@@ -12,7 +10,13 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-st.image(TJRO_IMAGE, width=215)
+if 'connected' not in st.session_state:
+    st.session_state['connected'] = False
+
+authenticator.check_authentification()
+show_user_sidebar()
+
+st.image(utils.TJRO_IMAGE, width=215)
 st.title("Sistema de Gestão - CPCAD")
 st.info("Bem-vindo ao sistema de monitoramento da Comissão de Enfrentamento ao Assédio.")
 
@@ -21,7 +25,7 @@ Atendimento, Operacional, Gestao = st.columns(3, gap="medium", vertical_alignmen
 with Atendimento:
     with st.container(border=True, gap='medium'):
         st.markdown(
-            utils.render_svg_icon(icons.ATENDIMENTO_DOC), 
+            utils.render_svg_icon(svg.ATENDIMENTO_DOC), 
             unsafe_allow_html=True
         )
         st.subheader("Atendimento", text_alignment="center")
@@ -32,7 +36,7 @@ with Atendimento:
 with Operacional:
     with st.container(border=True, gap='medium'):
         st.markdown(
-            utils.render_svg_icon(icons.OPERACIONAL_GEAR), 
+            utils.render_svg_icon(svg.OPERACIONAL_GEAR), 
             unsafe_allow_html=True
         )
         st.subheader("Operacional", text_alignment="center" )
@@ -43,7 +47,7 @@ with Operacional:
 with Gestao:
     with st.container(border=True, gap='medium'):
         st.markdown(
-            utils.render_svg_icon(icons.GESTAO_CHART), 
+            utils.render_svg_icon(svg.GESTAO_CHART), 
             unsafe_allow_html=True
         )
         st.subheader("Gestão", text_alignment="center")

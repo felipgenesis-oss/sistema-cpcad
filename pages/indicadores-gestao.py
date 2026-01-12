@@ -1,14 +1,17 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from src.auth import check_password
+import src.auth as auth 
 from src.data import load_data, process_sla
 import src.utils as utils
 
 st.set_page_config(page_title="Indicadores de Gestão", layout="wide")
 
-# 1. Verificação de Segurança (Gestores também precisam de senha? Assumindo que sim)
-if not check_password():
+
+if 'connected' not in st.session_state:
+    st.session_state['connected'] = False
+
+if not auth.check_password():
     st.stop()
 
 st.title("Indicadores de Gestão - CPCAD")
