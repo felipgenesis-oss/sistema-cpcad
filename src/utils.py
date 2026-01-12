@@ -1,5 +1,7 @@
 TJRO_BLUE = "#0c326f"
 
+TJRO_IMAGE = "https://www.tjro.jus.br/templates/portal_tjro_helix_j5/images/presets/default/logo.png"
+
 def footer():
     return f"""
     <div style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: white; text-align: center; color: #666; font-size: 12px; padding: 10px; border-top: 1px solid #eee; z-index: 1000;">

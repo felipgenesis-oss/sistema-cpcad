@@ -1,14 +1,13 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from src.auth import check_password
+import src.auth as auth 
 from src.data import load_data, process_sla
 import src.utils as utils
 
 st.set_page_config(page_title="Operacional CPCAD", layout="wide")
 
-if not check_password():
-    st.stop()
+auth.require_auth()
 
 st.title("Painel Operacional - CPCAD")
 st.markdown("### Monitoramento de Prazos e Fluxo Processual")
