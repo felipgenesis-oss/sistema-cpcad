@@ -5,32 +5,34 @@ import os
 import json
 import tempfile
 
-# Caminho local do arquivo
 LOCAL_SECRET_PATH = '.streamlit/client_secret_100094970846-lsbpg08p65j87i4i0gvj66b1qnnlm155.apps.googleusercontent.com.json'
 
-def get_secret_path():
-    """
-    Retorna o caminho do arquivo de credenciais.
-    1. Se o arquivo local existir, usa ele.
-    2. Se não, tenta ler do st.secrets e cria um arquivo temporário.
-    """
+def get_auth_config():
+
     if os.path.exists(LOCAL_SECRET_PATH):
-        return LOCAL_SECRET_PATH
+        return LOCAL_SECRET_PATH, 'http://localhost:8501'
     
-    if "google_oauth" in st.secrets:
+    if "web" in st.secrets:
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
-            json.dump(dict(st.secrets["google_oauth"]), temp_file)
-            return temp_file.name
+            secret_dict = {"web": dict(st.secrets["web"])}
+            json.dump(secret_dict, temp_file)
             
-    st.error("Arquivo de credenciais não encontrado e 'google_oauth' não configurado nos Secrets.")
+            redirect_uris = st.secrets["web"].get("redirect_uris", [])
+            redirect_uri = redirect_uris[0] if redirect_uris else st.secrets["web"].get("redirect_uris_production", "")
+            
+            return temp_file.name, redirect_uri
+            
+    st.error("Credenciais de autenticação não encontradas (Local ou Secrets).")
     st.stop()
-    return None
+    return None, None
+
+secret_path, redirect_uri_config = get_auth_config()
 
 authenticator = Authenticate(
-    secret_credentials_path=get_secret_path(),
+    secret_credentials_path=secret_path,
     cookie_name='cpcad_auth_cookie',
     cookie_key='digite_aqui_uma_frase_bem_longa_e_aleatoria_para_seguranca',
-    redirect_uri='http://localhost:8501',
+    redirect_uri=redirect_uri_config,
 )
 
 def _ensure_session_state():
