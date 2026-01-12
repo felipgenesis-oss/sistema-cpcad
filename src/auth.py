@@ -1,11 +1,33 @@
 import streamlit as st
 import src.utils as utils
 from streamlit_google_auth import Authenticate
+import os
+import json
+import tempfile
 
-SECRET_PATH = '.streamlit/client_secret_100094970846-lsbpg08p65j87i4i0gvj66b1qnnlm155.apps.googleusercontent.com.json'
+# Caminho local do arquivo
+LOCAL_SECRET_PATH = '.streamlit/client_secret_100094970846-lsbpg08p65j87i4i0gvj66b1qnnlm155.apps.googleusercontent.com.json'
+
+def get_secret_path():
+    """
+    Retorna o caminho do arquivo de credenciais.
+    1. Se o arquivo local existir, usa ele.
+    2. Se não, tenta ler do st.secrets e cria um arquivo temporário.
+    """
+    if os.path.exists(LOCAL_SECRET_PATH):
+        return LOCAL_SECRET_PATH
+    
+    if "google_oauth" in st.secrets:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_file:
+            json.dump(dict(st.secrets["google_oauth"]), temp_file)
+            return temp_file.name
+            
+    st.error("Arquivo de credenciais não encontrado e 'google_oauth' não configurado nos Secrets.")
+    st.stop()
+    return None
 
 authenticator = Authenticate(
-    secret_credentials_path=SECRET_PATH,
+    secret_credentials_path=get_secret_path(),
     cookie_name='cpcad_auth_cookie',
     cookie_key='digite_aqui_uma_frase_bem_longa_e_aleatoria_para_seguranca',
     redirect_uri='http://localhost:8501',
@@ -20,7 +42,6 @@ def _ensure_session_state():
 
 def show_user_sidebar():
     """Exibe informações do usuário na barra lateral se estiver logado."""
-    # Garante estado antes de acessar
     _ensure_session_state()
     
     if st.session_state.get('connected'):
