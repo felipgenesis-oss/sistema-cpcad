@@ -7,8 +7,7 @@ import src.utils as utils
 
 st.set_page_config(page_title="Operacional CPCAD", layout="wide")
 
-if not auth.check_password():
-    st.stop()
+auth.require_auth()
 
 st.title("Painel Operacional - CPCAD")
 st.markdown("### Monitoramento de Prazos e Fluxo Processual")

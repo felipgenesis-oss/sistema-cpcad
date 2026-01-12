@@ -7,12 +7,7 @@ import src.utils as utils
 
 st.set_page_config(page_title="Indicadores de Gestão", layout="wide")
 
-
-if 'connected' not in st.session_state:
-    st.session_state['connected'] = False
-
-if not auth.check_password():
-    st.stop()
+auth.require_auth()
 
 st.title("Indicadores de Gestão - CPCAD")
 st.markdown("### Visão Estratégica e Estatísticas")

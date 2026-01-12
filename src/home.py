@@ -1,7 +1,9 @@
 import streamlit as st
 import assets.svg as svg
 import src.utils as utils
-from src.auth import authenticator, show_user_sidebar
+import src.auth as auth
+
+auth.check_session()
 
 st.set_page_config(
     page_title="Portal CPCAD", 
@@ -9,12 +11,6 @@ st.set_page_config(
     page_icon="⚖️", 
     initial_sidebar_state="auto"
 )
-
-if 'connected' not in st.session_state:
-    st.session_state['connected'] = False
-
-authenticator.check_authentification()
-show_user_sidebar()
 
 st.image(utils.TJRO_IMAGE, width=215)
 st.title("Sistema de Gestão - CPCAD")
