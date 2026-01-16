@@ -20,7 +20,6 @@ def load_data():
 
     df = df.dropna(how='all')
     
-    # Normalização básica de colunas
     if not df.empty:
         # Tenta identificar colunas dinamicamente ou usa defaults
         col_data = df.columns[0] 
@@ -78,3 +77,61 @@ def process_sla(df):
     df['Status Prazos'] = df.apply(calcular_status, axis=1)
     
     return df
+
+# Definição do fluxo padrão de fases do processo
+FLUXO_FASES = [
+    "Triagem Inicial",
+    "Distribuição",
+    "Instrução",
+    "Julgamento",
+    "Recurso",
+    "Conclusão"
+]
+
+def process_user(df, email):
+    """
+    Filtra os processos do usuário logado e prepara os dados de visualização.
+    Retorna uma lista de dicionários com as informações solicitadas.
+    """
+    if df.empty or not email:
+        return []
+
+    col_email = next((c for c in df.columns if 'e-mail' in c.lower() or 'email' in c.lower()), None)
+    
+    if not col_email:
+        st.error("Coluna de e-mail não encontrada na planilha.")
+        return []
+
+    df_user = df[df[col_email] == email].copy()
+    
+    resultados = []
+    
+    for _, row in df_user.iterrows():
+        fase_atual = row.get('Fase Atual', 'Triagem Inicial')
+        
+        # Calcula próximas fases
+        proximas_fases = []
+        if fase_atual in FLUXO_FASES:
+            idx = FLUXO_FASES.index(fase_atual)
+            proximas_fases = FLUXO_FASES[idx+1:]
+        else:
+            # Se a fase atual não estiver no fluxo conhecido, assume que não há próximas ou mostra todas após Triagem
+            proximas_fases = ["Fase não mapeada"]
+
+        data_mov = row.get('Data Ultima Movimentacao')
+        if isinstance(data_mov, pd.Timestamp):
+            data_mov_fmt = data_mov.strftime('%d/%m/%Y')
+        else:
+            data_mov_fmt = str(data_mov)
+
+        resultados.append({
+            'id_processo': row.get('ID Processo SEI', 'N/A'),
+            'fase_atual': fase_atual,
+            'proximas_fases': proximas_fases,
+            'unidade_responsavel': row.get('Unidade Responsável', 'Em análise'),
+            'data_movimentacao': data_mov_fmt
+        })
+        
+    return resultados
+    
+    
