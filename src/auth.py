@@ -4,8 +4,49 @@ from streamlit_google_auth import Authenticate
 import os
 import json
 import tempfile
+from streamlit_gsheets import GSheetsConnection
 
 LOCAL_SECRET_PATH = '.streamlit/client_secret_100094970846-lsbpg08p65j87i4i0gvj66b1qnnlm155.apps.googleusercontent.com.json'
+
+def _ensure_email_is_present():
+    email = st.session_state.get("user_info").get("email")
+
+    conn = st.connection(
+        "gsheets",
+        type=GSheetsConnection
+    )
+
+    df = conn.read()
+
+    try:
+        if df['6. E-mail institucional'] != email:
+            raise ValueError
+    
+    except ValueError:
+        st.error(f"Você não possui nenhuma entrada no sistema")
+
+    return
+
+
+#! WIP, not needed as google OAuth does it
+def _ensure_login_is_trusted():
+    email = st.session_state.get("user_info").get("email")
+
+    conn = st.connection(
+        "gsheets",
+        type=GSheetsConnection
+    )
+
+    df = conn.read()
+
+    try:
+        if df['Email'] != email:
+            raise ValueError
+    
+    except ValueError:
+        st.error(f"Apenas e-mails institucionais são autorizados")
+
+    return
 
 def get_auth_config():
 
